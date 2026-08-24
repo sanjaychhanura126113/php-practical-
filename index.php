@@ -1,46 +1,37 @@
+<?php include 'config/db.php'; ?>
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>User Array Input</title>
+    <title>PHP CRUD</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
-    <h2>Enter Your Favorite Fruits</h2>
-    <form method="POST" action="">
-        Fruit 1: <input type="text" name="userArray[]" required><br><br>
-        Fruit 2: <input type="text" name="userArray[]" required><br><br>
-        Fruit 3: <input type="text" name="userArray[]" required><br><br>
-        <button type="submit">Submit Array</button>
-    </form>
-
-    <hr>
-
-    <?php
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        
-        if (isset($_POST['userArray'])) {
-            $fruits = $_POST['userArray'];
-            
-            echo "<h3>You entered the following array:</h3>";
-            
-            echo "<pre>";
-            print_r($fruits);
-            echo "</pre>";
-
-            echo "<h3>Formatted Output:</h3>";
-            echo "<ul>";
-            foreach ($fruits as $index => $fruit) {
-                $safe_fruit = htmlspecialchars($fruit);
-                echo "<li>Index $index: $safe_fruit</li>";
-            }
-            echo "</ul>";
-            
-            $total_items = count($fruits);
-            echo "<p>Total items in your array: <strong>$total_items</strong></p>";
-        }
-    }
-    ?>
-
+<div class="container">
+    <h2>User Management System</h2>
+    <a href="create.php" class="btn btn-add">+ Add New User</a>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Actions</th>
+        </tr>
+        <?php
+        $result = $conn->query("SELECT * FROM users ORDER BY id DESC");
+        while($row = $result->fetch_assoc()): ?>
+        <tr>
+            <td><?php echo $row['id']; ?></td>
+            <td><?php echo $row['name']; ?></td>
+            <td><?php echo $row['email']; ?></td>
+            <td><?php echo $row['phone']; ?></td>
+            <td>
+                <a href="edit.php?id=<?php echo $row['id']; ?>" class="btn btn-edit">Edit</a>
+                <a href="delete.php?id=<?php echo $row['id']; ?>" class="btn btn-delete" onclick="return confirm('Are you sure?')">Delete</a>
+            </td>
+        </tr>
+        <?php endwhile; ?>
+    </table>
+</div>
 </body>
 </html>
